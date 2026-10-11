@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Movie Explorer — BookMyShow-Inspired Movie Discovery & Ticketing</title>
+  <meta name="description" content="Discover, explore, and simulate booking movie tickets across genres and languages with an interactive cinema seat layout and real-time filters.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ==========================================================================
+       1. TOP NAVIGATION HEADER (Crisp White + City Selector + Live Search)
+       ========================================================================== -->
+  <header class="site-header" role="banner">
+    <div class="top-navbar">
+      
+      <!-- Brand Logo -->
+      <a href="#home" class="nav-brand" aria-label="Movie Explorer Home">
+        <span aria-hidden="true">🎬</span>
+        <span>Movie <span class="brand-red">Explorer</span></span>
+      </a>
+
+      <!-- Real-Time Search Bar -->
+      <div class="nav-search-wrap" role="search">
+        <span class="nav-search-icon" aria-hidden="true">🔎</span>
+        <input 
+          type="search" 
+          id="mainSearchInput" 
+          class="nav-search-input" 
+          placeholder="Search for movies, genres…" 
+          aria-label="Search for movies, genres"
+          autocomplete="off"
+        >
+        <button type="button" id="mainSearchClear" class="nav-search-clear" aria-label="Clear Search Input">✕</button>
+      </div>
+
+      <!-- Right Navigation Actions -->
+      <div class="nav-right-actions">
+        <!-- City Selector -->
+        <label for="headerCitySelect" class="sr-only">Select City</label>
+        <select id="headerCitySelect" class="city-dropdown-menu" aria-label="Select City">
+          <option value="Visakhapatnam" selected>📍 Visakhapatnam</option>
+          <option value="Hyderabad">📍 Hyderabad</option>
+          <option value="Bengaluru">📍 Bengaluru</option>
+          <option value="Chennai">📍 Chennai</option>
+          <option value="Mumbai">📍 Mumbai</option>
+          <option value="Delhi-NCR">📍 Delhi-NCR</option>
+          <option value="Vijayawada">📍 Vijayawada</option>
+          <option value="Kolkata">📍 Kolkata</option>
+          <option value="Kochi">📍 Kochi</option>
+          <option value="Pune">📍 Pune</option>
+        </select>
+
+        <!-- Main Nav Links -->
+        <ul class="nav-main-links">
+          <li><a href="#movies" class="active">Movies</a></li>
+          <li><a href="#coming-soon">Coming Soon</a></li>
+          <li><a href="#about">About</a></li>
+        </ul>
+
+        <!-- User Authentication Control -->
+        <div id="authNavWrapper">
+          <button type="button" class="btn-signin-demo" id="demoSignInBtn" onclick="openSignInModal()">
+            Sign In
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Secondary Category Navigation Bar -->
+    <nav class="sub-navbar" aria-label="Category Navigation">
+      <div class="sub-navbar-container">
+        <ul class="sub-nav-categories">
+          <li>
+            <a href="#movies" class="sub-nav-link active">Movies</a>
+          </li>
+          <li>
+            <a href="javascript:void(0)" class="sub-nav-link demo-category-link" data-cat="Events">
+              <span>Events</span> <span class="demo-chip">Demo</span>
+            </a>
+          </li>
+          <li>
+            <a href="javascript:void(0)" class="sub-nav-link demo-category-link" data-cat="Plays">
+              <span>Plays</span> <span class="demo-chip">Demo</span>
+            </a>
+          </li>
+          <li>
+            <a href="javascript:void(0)" class="sub-nav-link demo-category-link" data-cat="Sports">
+              <span>Sports</span> <span class="demo-chip">Demo</span>
+            </a>
+          </li>
+          <li>
+            <a href="javascript:void(0)" class="sub-nav-link demo-category-link" data-cat="Activities">
+              <span>Activities</span> <span class="demo-chip">Demo</span>
+            </a>
+          </li>
+        </ul>
+
+        <div class="sub-nav-right">
+          <span>⚡ Front-End Engineering Project</span>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- ==========================================================================
+       2. HERO PROMOTIONAL BANNER CAROUSEL (3 Curated Slides)
+       ========================================================================== -->
+  <section class="hero-banner-section" id="heroBannerSection" aria-label="Promotional Carousel">
+    <div class="hero-banner-container">
+      
+      <!-- Slide 1 -->
+      <div class="hero-slide active" style="background-image: url('https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=1200&auto=format&fit=crop&q=80');">
+        <div class="hero-slide-overlay"></div>
+        <div class="hero-slide-content">
+          <div class="hero-promo-badge">⭐ AUDIENCE HIT • 9.6 SCORE</div>
+          <h2 class="hero-slide-title">HanuMan</h2>
+          <div class="hero-slide-meta">
+            <span class="hero-rating-pill">⭐ 9.6 / 10</span>
+            <span>•</span>
+            <span>Telugu • Action / Superhero</span>
+            <span>•</span>
+            <span>2024</span>
+          </div>
+          <p class="hero-slide-desc">
+            An ordinary young man in the village of Anjanadri gains celestial superpowers to protect his people against ruthless modern mercenaries.
+          </p>
+          <button class="btn-hero-cta" type="button" onclick="startBookingProcess(1)">
+            🎟️ Explore Movie &amp; Book
+          </button>
+        </div>
+      </div>
+
+      <!-- Slide 2 -->
+      <div class="hero-slide" style="background-image: url('https://images.unsplash.com/photo-1509198397868-475647b2a1e5?w=1200&auto=format&fit=crop&q=80');">
+        <div class="hero-slide-overlay"></div>
+        <div class="hero-slide-content">
+          <div class="hero-promo-badge">🔥 HIGHLY ANTICIPATED • 506K+ LIKES</div>
+          <h2 class="hero-slide-title">The Paradise</h2>
+          <div class="hero-slide-meta">
+            <span class="hero-rating-pill">⭐ 9.2 / 10</span>
+            <span>•</span>
+            <span>Telugu • Action / Drama</span>
+            <span>•</span>
+            <span>2025</span>
+          </div>
+          <p class="hero-slide-desc">
+            Natural Star Nani teams up with director Srikanth Odela in a raw, explosive action saga of brotherhood and power.
+          </p>
+          <button class="btn-hero-cta" type="button" onclick="startBookingProcess(2)">
+            🎟️ Explore Movie &amp; Book
+          </button>
+        </div>
+      </div>
+
+      <!-- Slide 3 -->
+      <div class="hero-slide" style="background-image: url('https://images.unsplash.com/photo-1534447677768-be436bb09401?w=1200&auto=format&fit=crop&q=80');">
+        <div class="hero-slide-overlay"></div>
+        <div class="hero-slide-content">
+          <div class="hero-promo-badge">⭐ BLOCKBUSTER SPOTLIGHT</div>
+          <h2 class="hero-slide-title">Kalki 2898 AD</h2>
+          <div class="hero-slide-meta">
+            <span class="hero-rating-pill">⭐ 8.6 / 10</span>
+            <span>•</span>
+            <span>Telugu • Sci-Fi / Action</span>
+            <span>•</span>
+            <span>2024</span>
+          </div>
+          <p class="hero-slide-desc">
+            In a futuristic dystopia, a modern avatar descends to Earth to protect humanity against dark, tyrannical forces.
+          </p>
+          <button class="btn-hero-cta" type="button" onclick="startBookingProcess(3)">
+            🎟️ Explore Movie &amp; Book
+          </button>
+        </div>
+      </div>
+
+      <!-- Controls -->
+      <div class="hero-carousel-nav">
+        <button class="hero-nav-arrow" id="heroPrevBtn" aria-label="Previous Slide">‹</button>
+        <div class="hero-dots-row">
+          <button class="hero-dot active" aria-label="Go to slide 1"></button>
+          <button class="hero-dot" aria-label="Go to slide 2"></button>
+          <button class="hero-dot" aria-label="Go to slide 3"></button>
+        </div>
+        <button class="hero-nav-arrow" id="heroNextBtn" aria-label="Next Slide">›</button>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       3. RECOMMENDED MOVIES (Horizontally Scrollable Carousel)
+       ========================================================================== -->
+  <section class="content-section" id="recommendedSection" aria-label="Recommended Movies">
+    <div class="section-head-row">
+      <div>
+        <h2 class="section-title">Recommended Movies</h2>
+        <p class="section-subtitle">Trending audience picks and critically acclaimed blockbusters.</p>
+      </div>
+      <a href="#movies" class="section-see-all">See All Movies →</a>
+    </div>
+
+    <div class="carousel-viewport-wrapper">
+      <button class="track-arrow-btn track-arrow-left" id="recScrollLeft" aria-label="Scroll left">‹</button>
+      <div class="horizontal-movies-track" id="recommendedTrack">
+        <!-- Dynamically populated via script.js -->
+      </div>
+      <button class="track-arrow-btn track-arrow-right" id="recScrollRight" aria-label="Scroll right">›</button>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       4. NOW SHOWING (15 Movies in Responsive Grid + Multi-Filters & Sorting)
+       ========================================================================== -->
+  <section class="content-section" id="movies">
+    <div class="now-showing-wrapper">
+      
+      <div class="section-head-row">
+        <div>
+          <h2 class="section-title">Now Showing</h2>
+          <p class="section-subtitle">Select a movie to check showtimes and reserve demo seats.</p>
+        </div>
+      </div>
+
+      <!-- Filters & Sorting Control Panel -->
+      <div class="filters-toolbar-card">
+        
+        <!-- Filter Chips (Language + Genre) -->
+        <div class="filter-chips-scroll" role="toolbar" aria-label="Filter movies">
+          <button class="filter-chip-btn active" data-filter="All Movies">All Movies</button>
+          <button class="filter-chip-btn" data-filter="Telugu">Telugu</button>
+          <button class="filter-chip-btn" data-filter="Hindi">Hindi</button>
+          <button class="filter-chip-btn" data-filter="English">English</button>
+          <button class="filter-chip-btn" data-filter="Tamil">Tamil</button>
+          <button class="filter-chip-btn" data-filter="Action">Action</button>
+          <button class="filter-chip-btn" data-filter="Comedy">Comedy</button>
+          <button class="filter-chip-btn" data-filter="Drama">Drama</button>
+          <button class="filter-chip-btn" data-filter="Romance">Romance</button>
+          <button class="filter-chip-btn" data-filter="Science Fiction">Science Fiction</button>
+          <button class="filter-chip-btn" data-filter="Animation">Animation</button>
+          <button class="filter-chip-btn" data-filter="Thriller">Thriller</button>
+        </div>
+
+        <!-- Secondary Toolbar: Results Count, Sort Dropdown & Browse by Cinemas -->
+        <div class="filters-secondary-row">
+          <span class="results-meta-count" id="nowShowingCount">Showing 15 of 15 movies</span>
+          
+          <div class="controls-actions-group">
+            <label for="nowShowingSortSelect" class="sr-only">Sort Movies</label>
+            <select id="nowShowingSortSelect" class="styled-sort-select" aria-label="Sort Movies">
+              <option value="rating-desc">Highest Rating</option>
+              <option value="year-desc">Newest Release</option>
+              <option value="year-asc">Oldest Release</option>
+              <option value="title-asc">Alphabetical (A - Z)</option>
+            </select>
+
+            <button type="button" class="btn-browse-cinemas" onclick="openBrowseCinemasModal()">
+              🏛️ Browse by Cinemas
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Responsive Grid for all 15 Movies -->
+      <div class="now-showing-grid" id="nowShowingGrid">
+        <!-- Dynamically rendered via script.js -->
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       5. COMING SOON SECTION
+       ========================================================================== -->
+  <section class="content-section" id="coming-soon">
+    <div class="section-head-row">
+      <div>
+        <h2 class="section-title">Coming Soon</h2>
+        <p class="section-subtitle">Highly anticipated upcoming theatrical releases.</p>
+      </div>
+    </div>
+
+    <div class="coming-soon-grid" id="comingSoonGrid">
+      <!-- Dynamically populated via script.js -->
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       6. ABOUT SECTION
+       ========================================================================== -->
+  <section class="content-section" id="about">
+    <div class="about-card-box">
+      <div class="section-head-row" style="margin-bottom: 12px;">
+        <div>
+          <h2 class="section-title">About Movie Explorer</h2>
+          <p class="section-subtitle">Front-End Architecture &amp; Academic Overview</p>
+        </div>
+      </div>
+
+      <p class="about-lead-p">
+        Movie Explorer is a front-end movie discovery and ticketing web application inspired by commercial cinema platforms like BookMyShow. Built completely using standard <strong>HTML5, CSS3, and modern Vanilla JavaScript (ES6+)</strong> with zero external libraries or backend frameworks, it showcases responsive design, DOM manipulation, multi-criteria filtering, and simulated seat reservation workflows.
+      </p>
+
+      <div class="about-features-grid">
+        <div class="about-feature-item">
+          <h4>🔎 Instant Search &amp; Filters</h4>
+          <p>Real-time title searching combined with language/genre chips and multi-criteria non-destructive sorting.</p>
+        </div>
+        <div class="about-feature-item">
+          <h4>💺 Cinema &amp; Seat Booking Flow</h4>
+          <p>Interactive theatre seat matrix featuring tier categorisation (Regular and Premium at the back) and dynamic price calculation.</p>
+        </div>
+        <div class="about-feature-item">
+          <h4>📱 100% Responsive UI</h4>
+          <p>Mobile-optimized horizontal poster tracks, compact navigation, and accessible keyboard focus states.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       7. MODALS FRAMEWORK
+       ========================================================================== -->
+
+  <!-- A. Movie Details Modal -->
+  <div class="modal-overlay" id="movieDetailsModal" role="dialog" aria-modal="true" aria-labelledby="movieDetailsModalTitle">
+    <div class="modal-dialog-box" style="max-width: 760px;">
+      <button type="button" class="modal-close-cross" onclick="closeModal('movieDetailsModal')" aria-label="Close dialog">✕</button>
+      <div id="movieDetailsBody"></div>
+    </div>
+  </div>
+
+  <!-- B. Interactive Cinema & Seat Selection Modal -->
+  <div class="modal-overlay" id="bookingModal" role="dialog" aria-modal="true">
+    <div class="modal-dialog-box booking-modal-box">
+      <button type="button" class="modal-close-cross" onclick="closeModal('bookingModal')" aria-label="Close dialog">✕</button>
+      
+      <div class="booking-header-strip">
+        <h3 class="booking-modal-title" id="bookingMovieHeading">Book Tickets</h3>
+        <p class="booking-modal-sub">Select cinema, date, showtime, and your preferred seats.</p>
+      </div>
+
+      <!-- 1. Cinema Selection Choices -->
+      <div class="booking-field-row">
+        <span class="booking-field-label" id="bookingCinemaLabel">1. Select Cinema in Visakhapatnam</span>
+        <div class="cinema-options-grid" id="bookingCinemaChoices"></div>
+      </div>
+
+      <!-- 2. Date Strip -->
+      <div class="booking-field-row">
+        <span class="booking-field-label">2. Select Date</span>
+        <div class="date-strip-scroll" id="bookingDateStrip"></div>
+      </div>
+
+      <!-- 3. Showtime Chips -->
+      <div class="booking-field-row">
+        <span class="booking-field-label">3. Select Show Time</span>
+        <div class="showtimes-choice-row" id="bookingShowtimeChoices"></div>
+      </div>
+
+      <!-- 4. Cinema Seating Canvas -->
+      <div class="theatre-seat-layout-panel">
+        <div class="screen-visual-curve"></div>
+        <div class="screen-subtext">ALL EYES THIS WAY • CINEMA SCREEN</div>
+        
+        <div class="seat-legend-bar">
+          <div class="legend-chip">
+            <div class="legend-swatch swatch-avail"></div>
+            <span>Available</span>
+          </div>
+          <div class="legend-chip">
+            <div class="legend-swatch swatch-selected"></div>
+            <span>Selected</span>
+          </div>
+          <div class="legend-chip">
+            <div class="legend-swatch swatch-unavail"></div>
+            <span>Unavailable</span>
+          </div>
+        </div>
+
+        <div class="seat-matrix-wrapper" id="theatreSeatMatrix"></div>
+      </div>
+
+      <!-- 5. Running Summary & Continue Bar -->
+      <div class="booking-summary-panel">
+        <div class="summary-stats-box">
+          <div>
+            <div style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">SEATS</div>
+            <div class="summary-field-val" id="summarySeatsList">None</div>
+          </div>
+          <div>
+            <div style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">TICKETS</div>
+            <div class="summary-field-val" id="summaryTicketsCount">0 Seats</div>
+          </div>
+          <div>
+            <div style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">TOTAL AMOUNT</div>
+            <div class="summary-field-total" id="summaryTotalAmount">₹0</div>
+          </div>
+        </div>
+
+        <button type="button" class="btn-continue-checkout" id="btnProceedConfirmation" onclick="finalizeBookingConfirmation()" disabled>
+          Continue to Confirmation →
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- C. Simulated Ticket Confirmation Modal -->
+  <div class="modal-overlay" id="ticketConfirmationModal" role="dialog" aria-modal="true">
+    <div class="modal-dialog-box" style="max-width: 520px; padding: 20px;">
+      <button type="button" class="modal-close-cross" onclick="closeModal('ticketConfirmationModal')" aria-label="Close dialog">✕</button>
+      <div id="ticketDetailsContent"></div>
+    </div>
+  </div>
+
+  <!-- D. Browse by Cinemas Modal -->
+  <div class="modal-overlay" id="browseCinemasModal" role="dialog" aria-modal="true">
+    <div class="modal-dialog-box" style="max-width: 580px;">
+      <button type="button" class="modal-close-cross" onclick="closeModal('browseCinemasModal')" aria-label="Close dialog">✕</button>
+      <h3 id="browseCinemasTitle" style="font-size:1.4rem; font-weight:800; margin-bottom:6px;">Cinemas in Visakhapatnam</h3>
+      <div id="cinemasListContent"></div>
+    </div>
+  </div>
+
+  <!-- E. Sign In Modal (Fully Functional: Name & Email) -->
+  <div class="modal-overlay" id="signInModal" role="dialog" aria-modal="true" aria-labelledby="signInModalTitle">
+    <div class="modal-dialog-box" style="max-width: 440px; padding: 32px 28px;">
+      <button type="button" class="modal-close-cross" onclick="closeModal('signInModal')" aria-label="Close dialog">✕</button>
+      <div class="auth-modal-header">
+        <div class="auth-icon-badge">👤</div>
+        <h3 class="auth-modal-title" id="signInModalTitle">Sign In</h3>
+        <p class="auth-modal-sub">Sign in with your name and email to manage bookings and personalize your tickets.</p>
+      </div>
+
+      <form id="signInForm" novalidate onsubmit="handleSignInSubmit(event)">
+        <div class="form-group-field">
+          <label for="signInNameInput" class="form-label">Full Name</label>
+          <input type="text" id="signInNameInput" class="form-text-input" placeholder="e.g. Rahul Sharma" autocomplete="name" required />
+          <span class="form-error-hint" id="signInNameError">Please enter your name (at least 2 letters).</span>
+        </div>
+
+        <div class="form-group-field">
+          <label for="signInEmailInput" class="form-label">Email Address</label>
+          <input type="email" id="signInEmailInput" class="form-text-input" placeholder="e.g. rahul@example.com" autocomplete="email" required />
+          <span class="form-error-hint" id="signInEmailError">Please enter a valid email address (e.g. user@domain.com).</span>
+        </div>
+
+        <div class="form-error-general" id="signInGeneralError"></div>
+
+        <button type="submit" class="btn-auth-submit" id="signInSubmitBtn">
+          Sign In
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- F. User Profile / Account Modal (When Signed In) -->
+  <div class="modal-overlay" id="userProfileModal" role="dialog" aria-modal="true" aria-labelledby="userProfileModalTitle">
+    <div class="modal-dialog-box" style="max-width: 440px; padding: 32px 28px;">
+      <button type="button" class="modal-close-cross" onclick="closeModal('userProfileModal')" aria-label="Close dialog">✕</button>
+      <div class="auth-modal-header">
+        <div class="auth-avatar-big" id="profileModalAvatar">U</div>
+        <h3 class="auth-modal-title" id="userProfileModalTitle">My Account</h3>
+        <p class="auth-modal-sub">You are signed in to Movie Explorer.</p>
+      </div>
+
+      <div class="profile-details-card">
+        <div class="profile-detail-row">
+          <span class="profile-detail-label">Name</span>
+          <span class="profile-detail-val" id="profileModalName">-</span>
+        </div>
+        <div class="profile-detail-row">
+          <span class="profile-detail-label">Email</span>
+          <span class="profile-detail-val" id="profileModalEmail">-</span>
+        </div>
+        <div class="profile-detail-row">
+          <span class="profile-detail-label">City</span>
+          <span class="profile-detail-val" id="profileModalCity">Visakhapatnam</span>
+        </div>
+        <div class="profile-detail-row">
+          <span class="profile-detail-label">Status</span>
+          <span class="profile-detail-val" style="color:#16a34a; font-weight:700;">● Active</span>
+        </div>
+      </div>
+
+      <div class="profile-modal-actions">
+        <button type="button" class="btn-signout-danger" onclick="handleSignOut()">
+          🚪 Sign Out
+        </button>
+        <button type="button" class="btn-auth-cancel" onclick="closeModal('userProfileModal')">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       8. PROFESSIONAL FOOTER
+       ========================================================================== -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="footer-inner-container">
+      
+      <div class="footer-top-grid">
+        <div class="footer-brand-box">
+          <h4 class="footer-brand-title">🎬 Movie <span style="color:var(--primary-brand)">Explorer</span></h4>
+          <p class="footer-brand-desc">
+            A premium Indian movie discovery and ticketing demonstration platform inspired by commercial entertainment portals.
+          </p>
+        </div>
+
+        <div class="footer-col">
+          <h5>Movies by Language</h5>
+          <ul class="footer-links-list">
+            <li><a href="#movies">Telugu Movies</a></li>
+            <li><a href="#movies">Hindi Movies</a></li>
+            <li><a href="#movies">English Movies</a></li>
+            <li><a href="#movies">Tamil Movies</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h5>Explore Categories</h5>
+          <ul class="footer-links-list">
+            <li><a href="#movies">Now Showing</a></li>
+            <li><a href="#coming-soon">Coming Soon</a></li>
+            <li><a href="#movies">Top Rated Movies</a></li>
+            <li><a href="#about">Project Abstract</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h5>Technical Profile</h5>
+          <ul class="footer-links-list">
+            <li><span>HTML5 &amp; CSS3 Layouts</span></li>
+            <li><span>Vanilla JavaScript (ES6+)</span></li>
+            <li><span>Zero Framework Overhead</span></li>
+            <li><span>B.Tech Mini Project Viva</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom-band">
+        <div>© 2026 Movie Explorer Entertainment. Developed as a B.Tech Mini Project.</div>
+        <div>Simulated demo interface • Visakhapatnam, Andhra Pradesh</div>
+      </div>
+
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
