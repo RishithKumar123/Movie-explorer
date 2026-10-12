@@ -56,7 +56,6 @@
         <ul class="nav-main-links">
           <li><a href="#movies" class="active">Movies</a></li>
           <li><a href="#coming-soon">Coming Soon</a></li>
-          <li><a href="javascript:void(0)" onclick="openIntroModal()" style="color:var(--primary-brand); font-weight:700;">🎓 Project Info</a></li>
           <li><a href="#about">About</a></li>
         </ul>
 
@@ -319,53 +318,12 @@
           <p>Mobile-optimized horizontal poster tracks, compact navigation, and accessible keyboard focus states.</p>
         </div>
       </div>
-
-      <!-- Academic Project Presentation Slide Display -->
-      <div class="about-slide-showcase-box" style="margin-top: 26px; border-top: 1px solid var(--border-light); padding-top: 22px;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;">
-          <div>
-            <h4 style="font-size:1.15rem; font-weight:800; color:var(--text-main); margin-bottom:2px;">🎓 Academic Project Submission — Team-14</h4>
-            <p style="font-size:0.82rem; color:var(--text-muted);">Raghu Engineering College (A) • Dept. of Computer Science & Engineering (AI-ML)</p>
-          </div>
-          <button type="button" class="btn-intro-modal-trigger" onclick="openIntroModal()">
-            View Full Presentation Slide ↗
-          </button>
-        </div>
-        <div class="about-slide-preview-frame" onclick="openIntroModal()" style="cursor: pointer;" title="Click to view full presentation slide">
-          <img src="images/project-presentation-slide.png" alt="Raghu Engineering College Project Presentation Slide" style="width:100%; height:auto; border-radius:8px; display:block; box-shadow:0 4px 14px rgba(0,0,0,0.08); border: 1px solid var(--border-light);" />
-        </div>
-      </div>
     </div>
   </section>
 
   <!-- ==========================================================================
        7. MODALS FRAMEWORK
        ========================================================================== -->
-
-  <!-- 0. Academic Project Introduction Slide Modal (Raghu Engineering College) -->
-  <div class="modal-overlay" id="introSlideModal" role="dialog" aria-modal="true" aria-labelledby="introSlideModalTitle">
-    <div class="modal-dialog-box intro-slide-dialog" style="max-width: 920px; padding: 22px 24px; background: #ffffff;">
-      <button type="button" class="modal-close-cross" onclick="closeIntroModal()" aria-label="Close dialog">✕</button>
-      
-      <div class="intro-slide-card">
-        <!-- Slide Image Presentation -->
-        <div class="intro-slide-image-wrapper">
-          <img src="images/project-presentation-slide.png" alt="Raghu Engineering College - Movie Explorer Project Presentation" class="intro-slide-full-img" id="introSlideImage" />
-        </div>
-
-        <!-- Action / Continue Bar -->
-        <div class="intro-slide-footer">
-          <div class="intro-slide-meta">
-            <span class="intro-badge">Raghu Engineering College (A)</span>
-            <span class="intro-team">Team-14 • CSE AI-ML • 3-1 Mini Project</span>
-          </div>
-          <button type="button" class="btn-explore-project" onclick="closeIntroModal()">
-            Launch Movie Explorer &rarr;
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
 
   <!-- A. Movie Details Modal -->
   <div class="modal-overlay" id="movieDetailsModal" role="dialog" aria-modal="true" aria-labelledby="movieDetailsModalTitle">

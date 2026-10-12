@@ -1879,14 +1879,6 @@ function handleSignOut() {
   showToast("You have been signed out.");
 }
 
-function openIntroModal() {
-  openModal("introSlideModal");
-}
-
-function closeIntroModal() {
-  closeModal("introSlideModal");
-}
-
 // ==========================================================================
 // 13. DOM CONTENT LOADED INITIALIZATION
 // ==========================================================================
@@ -1898,9 +1890,4 @@ document.addEventListener("DOMContentLoaded", () => {
   applyFiltersAndRenderNowShowing();
   renderComingSoon();
   setupModalListeners();
-
-  // Show the Academic Introduction slide on opening the website
-  setTimeout(() => {
-    openIntroModal();
-  }, 450);
 });
