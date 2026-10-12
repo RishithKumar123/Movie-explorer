@@ -1,6 +1,6 @@
 /**
  * Movie Explorer — BookMyShow-Inspired Discovery & Ticketing Platform
- * Pure Vanilla JavaScript (ES6+) Architecture
+ * Pure JavaScript Architecture
  * Technologies: HTML5, CSS3, DOM Manipulation, Event Listeners
  */
 
