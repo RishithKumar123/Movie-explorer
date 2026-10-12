@@ -1660,6 +1660,10 @@ function setupOtpInputHandlers() {
   const boxes = Array.from(boxesGroup.querySelectorAll(".otp-digit-box"));
 
   boxes.forEach((box, idx) => {
+    // Focus & click: select content so user can immediately type/replace
+    box.addEventListener("focus", () => box.select());
+    box.addEventListener("click", () => box.select());
+
     // Handle typing and auto-advancing
     box.addEventListener("input", (e) => {
       const val = e.target.value.replace(/\D/g, "");
@@ -1718,6 +1722,17 @@ function setupOtpInputHandlers() {
       }
     });
   });
+
+  // Also enforce digit-only input on the phone number box
+  const phoneInput = document.getElementById("signInPhoneInput");
+  if (phoneInput) {
+    phoneInput.addEventListener("input", (e) => {
+      e.target.value = e.target.value.replace(/\D/g, "");
+      const phoneError = document.getElementById("signInPhoneError");
+      if (phoneError) phoneError.classList.remove("show");
+      phoneInput.classList.remove("input-error");
+    });
+  }
 }
 
 async function handleVerifyOtp() {
