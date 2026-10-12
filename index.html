@@ -426,35 +426,107 @@
     </div>
   </div>
 
-  <!-- E. Sign In Modal (Fully Functional: Name & Email) -->
+  <!-- E. Sign In Modal (CineBook Phone OTP Verification Flow) -->
   <div class="modal-overlay" id="signInModal" role="dialog" aria-modal="true" aria-labelledby="signInModalTitle">
-    <div class="modal-dialog-box" style="max-width: 440px; padding: 32px 28px;">
+    <div class="modal-dialog-box" style="max-width: 440px; padding: 28px 24px;">
       <button type="button" class="modal-close-cross" onclick="closeModal('signInModal')" aria-label="Close dialog">✕</button>
-      <div class="auth-modal-header">
-        <div class="auth-icon-badge">👤</div>
-        <h3 class="auth-modal-title" id="signInModalTitle">Sign In</h3>
-        <p class="auth-modal-sub">Sign in with your name and email to manage bookings and personalize your tickets.</p>
+      
+      <!-- STEP 1: Details Entry (Name, Email, Phone Number) -->
+      <div id="authStepDetails">
+        <div class="auth-modal-header">
+          <div class="auth-icon-badge">📱</div>
+          <h3 class="auth-modal-title" id="signInModalTitle">Sign In</h3>
+          <p class="auth-modal-sub">Enter your details and phone number to verify and access your tickets.</p>
+        </div>
+
+        <form id="signInForm" novalidate onsubmit="handleSendOtp(event)">
+          <div class="form-group-field">
+            <label for="signInNameInput" class="form-label">Full Name</label>
+            <input type="text" id="signInNameInput" class="form-text-input" placeholder="e.g. Rahul Sharma" autocomplete="name" required />
+            <span class="form-error-hint" id="signInNameError">Please enter your name (at least 2 letters).</span>
+          </div>
+
+          <div class="form-group-field">
+            <label for="signInEmailInput" class="form-label">Email Address</label>
+            <input type="email" id="signInEmailInput" class="form-text-input" placeholder="e.g. rahul@example.com" autocomplete="email" required />
+            <span class="form-error-hint" id="signInEmailError">Please enter a valid email address (e.g. user@domain.com).</span>
+          </div>
+
+          <div class="form-group-field">
+            <label for="signInPhoneInput" class="form-label">Phone Number</label>
+            <div class="phone-input-combo">
+              <select id="signInCountryCode" class="country-code-select" aria-label="Country Code">
+                <option value="+91" selected>🇮🇳 +91 (India)</option>
+                <option value="+1">🇺🇸 +1 (US)</option>
+                <option value="+44">🇬🇧 +44 (UK)</option>
+                <option value="+971">🇦🇪 +971 (UAE)</option>
+                <option value="+65">🇸🇬 +65 (Singapore)</option>
+                <option value="+61">🇦🇺 +61 (Australia)</option>
+              </select>
+              <input type="tel" id="signInPhoneInput" class="form-text-input phone-number-input" placeholder="9876543210" maxlength="14" autocomplete="tel-national" required />
+            </div>
+            <span class="form-error-hint" id="signInPhoneError">Please enter a valid 10-digit phone number.</span>
+          </div>
+
+          <div class="form-error-general" id="signInGeneralError"></div>
+
+          <button type="submit" class="btn-auth-submit" id="sendOtpSubmitBtn">
+            Send OTP
+          </button>
+        </form>
       </div>
 
-      <form id="signInForm" novalidate onsubmit="handleSignInSubmit(event)">
-        <div class="form-group-field">
-          <label for="signInNameInput" class="form-label">Full Name</label>
-          <input type="text" id="signInNameInput" class="form-text-input" placeholder="e.g. Rahul Sharma" autocomplete="name" required />
-          <span class="form-error-hint" id="signInNameError">Please enter your name (at least 2 letters).</span>
+      <!-- STEP 2: Phone OTP Verification Step -->
+      <div id="authStepOtp" style="display: none;">
+        <div class="auth-modal-header">
+          <div class="auth-icon-badge" style="background: rgba(248, 68, 100, 0.15); color: var(--primary-brand);">🔐</div>
+          <h3 class="auth-modal-title">Verify Phone Number</h3>
+          <p class="auth-success-banner" id="otpSuccessNotice">
+            Your OTP has been generated successfully. Please verify your phone number.
+          </p>
+          <div class="target-phone-tag">
+            Sent to: <strong id="otpDisplayPhone">+91 9876543210</strong>
+            <button type="button" class="btn-change-phone" onclick="returnToDetailsStep()">Edit</button>
+          </div>
         </div>
 
-        <div class="form-group-field">
-          <label for="signInEmailInput" class="form-label">Email Address</label>
-          <input type="email" id="signInEmailInput" class="form-text-input" placeholder="e.g. rahul@example.com" autocomplete="email" required />
-          <span class="form-error-hint" id="signInEmailError">Please enter a valid email address (e.g. user@domain.com).</span>
+        <!-- Development & Demonstration Sample OTP Banner -->
+        <div class="demo-otp-banner" id="demoOtpBannerBox">
+          <div class="demo-otp-header">
+            <span class="demo-badge">DEV / DEMO MODE</span>
+            <span class="demo-note">For development and demonstration purposes only</span>
+          </div>
+          <div class="demo-otp-body">
+            <span class="demo-otp-label">Demo OTP:</span>
+            <span class="demo-otp-value" id="demoOtpCodeDisplay">------</span>
+            <button type="button" class="btn-autofill-otp" onclick="autofillDemoOtp()" title="Auto-fill this demo code">Auto-Fill</button>
+          </div>
         </div>
 
-        <div class="form-error-general" id="signInGeneralError"></div>
+        <!-- 6 OTP Input Boxes -->
+        <div class="otp-inputs-row" id="otpBoxesGroup">
+          <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-digit-box" data-idx="0" aria-label="OTP Digit 1" />
+          <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-digit-box" data-idx="1" aria-label="OTP Digit 2" />
+          <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-digit-box" data-idx="2" aria-label="OTP Digit 3" />
+          <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-digit-box" data-idx="3" aria-label="OTP Digit 4" />
+          <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-digit-box" data-idx="4" aria-label="OTP Digit 5" />
+          <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-digit-box" data-idx="5" aria-label="OTP Digit 6" />
+        </div>
 
-        <button type="submit" class="btn-auth-submit" id="signInSubmitBtn">
-          Sign In
+        <!-- OTP Error Box -->
+        <div class="form-error-general" id="otpVerifyError"></div>
+
+        <button type="button" class="btn-auth-submit" id="verifyOtpBtn" onclick="handleVerifyOtp()">
+          Verify OTP
         </button>
-      </form>
+
+        <div class="resend-otp-wrapper">
+          <span>Didn't get the code?</span>
+          <button type="button" class="btn-resend-otp" id="btnResendOtp" onclick="handleResendOtp()" disabled>
+            Resend OTP (30s)
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -476,6 +548,10 @@
         <div class="profile-detail-row">
           <span class="profile-detail-label">Email</span>
           <span class="profile-detail-val" id="profileModalEmail">-</span>
+        </div>
+        <div class="profile-detail-row">
+          <span class="profile-detail-label">Phone</span>
+          <span class="profile-detail-val" id="profileModalPhone" style="font-weight:700; color:var(--text-main);">-</span>
         </div>
         <div class="profile-detail-row">
           <span class="profile-detail-label">City</span>

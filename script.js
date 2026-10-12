@@ -1228,7 +1228,7 @@ function finalizeBookingConfirmation() {
             ${AppState.user ? `
             <div style="grid-column: 1 / -1; background: #f8fafc; padding: 10px 14px; border-radius: 8px; border: 1px dashed var(--border-medium); margin-top: 4px;">
               <div class="ticket-label" style="margin-bottom: 2px;">Guest / Booker Details</div>
-              <div class="ticket-val" style="color:var(--text-main); font-weight:700; font-size:0.88rem;">👤 ${AppState.user.name} &bull; <span style="color:var(--text-muted); font-weight:500;">${AppState.user.email}</span></div>
+              <div class="ticket-val" style="color:var(--text-main); font-weight:700; font-size:0.88rem;">👤 ${AppState.user.name} &bull; <span style="color:var(--text-muted); font-weight:500;">${AppState.user.email}</span> &bull; <span style="color:var(--primary-brand); font-weight:700;">${AppState.user.phone || ''}</span></div>
             </div>` : ''}
           </div>
           <div class="ticket-perforation-divider"></div>
@@ -1341,8 +1341,77 @@ function setupModalListeners() {
 }
 
 // ==========================================================================
-// 12. FULLY FUNCTIONAL USER AUTHENTICATION (NAME & EMAIL)
+// 12. PHONE NUMBER OTP AUTHENTICATION SERVICE & LOGIC
 // ==========================================================================
+/**
+ * OtpAuthService:
+ * Modular authentication service designed for test/demo mode today and easily
+ * swappable for real SMS OTP providers (Supabase Auth, Firebase Auth, Twilio)
+ * in production.
+ */
+const OtpAuthService = {
+  activeSession: null,
+  countdownTimer: null,
+  countdownSeconds: 30,
+
+  /**
+   * Generates a 6-digit sample OTP for phone verification.
+   * For production, replace this body with an API call:
+   * e.g. await supabase.auth.signInWithOtp({ phone: fullPhoneNumber })
+   */
+  async requestOtp(fullName, email, countryCode, phone) {
+    const rawOtp = Math.floor(100000 + Math.random() * 900000).toString();
+    this.activeSession = {
+      name: fullName.trim(),
+      email: email.trim().toLowerCase(),
+      countryCode: countryCode,
+      phoneNumber: phone.trim(),
+      fullPhone: `${countryCode} ${phone.trim()}`,
+      demoOtp: rawOtp,
+      createdAt: Date.now()
+    };
+    return {
+      success: true,
+      message: "Your OTP has been generated successfully. Please verify your phone number.",
+      demoOtp: rawOtp,
+      targetPhone: this.activeSession.fullPhone
+    };
+  },
+
+  /**
+   * Verifies the user entered OTP against the active session.
+   * In production, replace with:
+   * e.g. await supabase.auth.verifyOtp({ phone: ..., token: ..., type: 'sms' })
+   */
+  async verifyOtp(enteredOtp) {
+    if (!this.activeSession) {
+      return { success: false, message: "Session expired. Please request a new OTP." };
+    }
+    const cleanEntered = (enteredOtp || "").toString().trim();
+    if (cleanEntered === this.activeSession.demoOtp) {
+      const user = {
+        name: this.activeSession.name,
+        email: this.activeSession.email,
+        phone: this.activeSession.fullPhone,
+        signedInAt: new Date().toISOString(),
+        authMethod: "phone_otp_sample"
+      };
+      this.clearSession();
+      return { success: true, user: user };
+    } else {
+      return { success: false, message: "Invalid OTP. Please try again." };
+    }
+  },
+
+  clearSession() {
+    this.activeSession = null;
+    if (this.countdownTimer) {
+      clearInterval(this.countdownTimer);
+      this.countdownTimer = null;
+    }
+  }
+};
+
 function initAuth() {
   try {
     const saved = localStorage.getItem("movieExplorerUser");
@@ -1353,6 +1422,7 @@ function initAuth() {
     AppState.user = null;
   }
   renderAuthNav();
+  setupOtpInputHandlers();
 }
 
 function getInitials(name) {
@@ -1390,11 +1460,18 @@ function openSignInModal() {
     return;
   }
 
+  // Reset steps to Step 1
+  returnToDetailsStep();
+
+  // Clear inputs and errors
   const nameInput = document.getElementById("signInNameInput");
   const emailInput = document.getElementById("signInEmailInput");
+  const phoneInput = document.getElementById("signInPhoneInput");
   const nameError = document.getElementById("signInNameError");
   const emailError = document.getElementById("signInEmailError");
+  const phoneError = document.getElementById("signInPhoneError");
   const generalError = document.getElementById("signInGeneralError");
+  const otpVerifyError = document.getElementById("otpVerifyError");
 
   if (nameInput) {
     nameInput.value = "";
@@ -1404,33 +1481,61 @@ function openSignInModal() {
     emailInput.value = "";
     emailInput.classList.remove("input-error");
   }
+  if (phoneInput) {
+    phoneInput.value = "";
+    phoneInput.classList.remove("input-error");
+  }
   if (nameError) nameError.classList.remove("show");
   if (emailError) emailError.classList.remove("show");
+  if (phoneError) phoneError.classList.remove("show");
   if (generalError) {
     generalError.textContent = "";
     generalError.classList.remove("show");
   }
+  if (otpVerifyError) {
+    otpVerifyError.textContent = "";
+    otpVerifyError.classList.remove("show");
+  }
 
+  clearOtpDigitBoxes();
   openModal("signInModal");
+
   setTimeout(() => {
     if (nameInput) nameInput.focus();
   }, 100);
 }
 
-function handleSignInSubmit(e) {
-  e.preventDefault();
+function returnToDetailsStep() {
+  const step1 = document.getElementById("authStepDetails");
+  const step2 = document.getElementById("authStepOtp");
+  if (step1) step1.style.display = "block";
+  if (step2) step2.style.display = "none";
+  if (OtpAuthService.countdownTimer) {
+    clearInterval(OtpAuthService.countdownTimer);
+    OtpAuthService.countdownTimer = null;
+  }
+}
+
+async function handleSendOtp(e) {
+  if (e) e.preventDefault();
 
   const nameInput = document.getElementById("signInNameInput");
   const emailInput = document.getElementById("signInEmailInput");
+  const countryCodeSelect = document.getElementById("signInCountryCode");
+  const phoneInput = document.getElementById("signInPhoneInput");
   const nameError = document.getElementById("signInNameError");
   const emailError = document.getElementById("signInEmailError");
+  const phoneError = document.getElementById("signInPhoneError");
+  const generalError = document.getElementById("signInGeneralError");
 
   const name = nameInput ? nameInput.value.trim() : "";
   const email = emailInput ? emailInput.value.trim() : "";
+  const countryCode = countryCodeSelect ? countryCodeSelect.value : "+91";
+  const rawPhone = phoneInput ? phoneInput.value.trim().replace(/[\s-]/g, "") : "";
 
   let isValid = true;
 
-  // Validate Name (minimum 2 characters)
+  // 1. Validate Name (minimum 2 letters)
   if (!name || name.length < 2) {
     if (nameInput) nameInput.classList.add("input-error");
     if (nameError) nameError.classList.add("show");
@@ -1440,7 +1545,7 @@ function handleSignInSubmit(e) {
     if (nameError) nameError.classList.remove("show");
   }
 
-  // Validate Email Address
+  // 2. Validate Email Address
   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!email || !emailPattern.test(email)) {
     if (emailInput) emailInput.classList.add("input-error");
@@ -1451,24 +1556,278 @@ function handleSignInSubmit(e) {
     if (emailError) emailError.classList.remove("show");
   }
 
-  if (!isValid) return;
-
-  // Save session to AppState and localStorage
-  AppState.user = {
-    name: name,
-    email: email,
-    signedInAt: new Date().toISOString()
-  };
-
-  try {
-    localStorage.setItem("movieExplorerUser", JSON.stringify(AppState.user));
-  } catch (err) {
-    console.warn("localStorage save failed:", err);
+  // 3. Validate Phone Number (must be 7-14 digits, typically 10 for India)
+  const phoneDigitsPattern = /^\d{7,14}$/;
+  if (!rawPhone || !phoneDigitsPattern.test(rawPhone)) {
+    if (phoneInput) phoneInput.classList.add("input-error");
+    if (phoneError) phoneError.classList.add("show");
+    isValid = false;
+  } else {
+    if (phoneInput) phoneInput.classList.remove("input-error");
+    if (phoneError) phoneError.classList.remove("show");
   }
 
-  renderAuthNav();
-  closeModal("signInModal");
-  showToast(`Welcome, ${name}! Signed in successfully.`);
+  if (!isValid) return;
+
+  const sendBtn = document.getElementById("sendOtpSubmitBtn");
+  if (sendBtn) {
+    sendBtn.disabled = true;
+    sendBtn.textContent = "Generating OTP...";
+  }
+
+  try {
+    const res = await OtpAuthService.requestOtp(name, email, countryCode, rawPhone);
+
+    // Switch to Step 2: OTP Verification
+    const step1 = document.getElementById("authStepDetails");
+    const step2 = document.getElementById("authStepOtp");
+    const displayPhoneEl = document.getElementById("otpDisplayPhone");
+    const demoOtpValEl = document.getElementById("demoOtpCodeDisplay");
+    const otpVerifyError = document.getElementById("otpVerifyError");
+
+    if (step1) step1.style.display = "none";
+    if (step2) step2.style.display = "block";
+    if (displayPhoneEl) displayPhoneEl.textContent = res.targetPhone;
+    if (demoOtpValEl) demoOtpValEl.textContent = res.demoOtp;
+    if (otpVerifyError) {
+      otpVerifyError.textContent = "";
+      otpVerifyError.classList.remove("show");
+    }
+
+    clearOtpDigitBoxes();
+    startResendCountdown(30);
+
+    // Auto focus the first OTP digit box
+    setTimeout(() => {
+      const firstBox = document.querySelector(".otp-digit-box[data-idx='0']");
+      if (firstBox) firstBox.focus();
+    }, 150);
+
+  } catch (err) {
+    if (generalError) {
+      generalError.textContent = "Failed to generate OTP. Please try again.";
+      generalError.classList.add("show");
+    }
+  } finally {
+    if (sendBtn) {
+      sendBtn.disabled = false;
+      sendBtn.textContent = "Send OTP";
+    }
+  }
+}
+
+function clearOtpDigitBoxes() {
+  const boxes = document.querySelectorAll(".otp-digit-box");
+  boxes.forEach(box => {
+    box.value = "";
+    box.classList.remove("input-error", "filled");
+  });
+}
+
+function getEnteredOtp() {
+  const boxes = document.querySelectorAll(".otp-digit-box");
+  let code = "";
+  boxes.forEach(box => {
+    code += box.value.trim();
+  });
+  return code;
+}
+
+function autofillDemoOtp() {
+  if (!OtpAuthService.activeSession || !OtpAuthService.activeSession.demoOtp) return;
+  const demoOtp = OtpAuthService.activeSession.demoOtp;
+  const boxes = document.querySelectorAll(".otp-digit-box");
+  for (let i = 0; i < boxes.length; i++) {
+    boxes[i].value = demoOtp[i] || "";
+    boxes[i].classList.add("filled");
+    boxes[i].classList.remove("input-error");
+  }
+  const lastBox = boxes[boxes.length - 1];
+  if (lastBox) lastBox.focus();
+
+  // Clear any existing error message
+  const otpVerifyError = document.getElementById("otpVerifyError");
+  if (otpVerifyError) {
+    otpVerifyError.textContent = "";
+    otpVerifyError.classList.remove("show");
+  }
+}
+
+function setupOtpInputHandlers() {
+  const boxesGroup = document.getElementById("otpBoxesGroup");
+  if (!boxesGroup) return;
+
+  const boxes = Array.from(boxesGroup.querySelectorAll(".otp-digit-box"));
+
+  boxes.forEach((box, idx) => {
+    // Handle typing and auto-advancing
+    box.addEventListener("input", (e) => {
+      const val = e.target.value.replace(/\D/g, "");
+      e.target.value = val ? val.charAt(val.length - 1) : "";
+
+      if (e.target.value) {
+        e.target.classList.add("filled");
+        e.target.classList.remove("input-error");
+        // Move to next box if available
+        if (idx < boxes.length - 1) {
+          boxes[idx + 1].focus();
+          boxes[idx + 1].select();
+        }
+      } else {
+        e.target.classList.remove("filled");
+      }
+
+      // Check if all 6 digits entered; optionally auto-verify or clear error
+      const otpVerifyError = document.getElementById("otpVerifyError");
+      if (otpVerifyError) otpVerifyError.classList.remove("show");
+    });
+
+    // Handle Backspace, Arrow keys, Delete
+    box.addEventListener("keydown", (e) => {
+      if (e.key === "Backspace") {
+        if (!e.target.value && idx > 0) {
+          boxes[idx - 1].focus();
+          boxes[idx - 1].select();
+        }
+      } else if (e.key === "ArrowLeft" && idx > 0) {
+        boxes[idx - 1].focus();
+        boxes[idx - 1].select();
+      } else if (e.key === "ArrowRight" && idx < boxes.length - 1) {
+        boxes[idx + 1].focus();
+        boxes[idx + 1].select();
+      } else if (e.key === "Enter") {
+        handleVerifyOtp();
+      }
+    });
+
+    // Handle Paste (e.g. user pastes 6 digits)
+    box.addEventListener("paste", (e) => {
+      e.preventDefault();
+      const pasted = (e.clipboardData || window.clipboardData).getData("text");
+      const digits = pasted.replace(/\D/g, "").slice(0, 6);
+      if (digits) {
+        for (let i = 0; i < boxes.length; i++) {
+          if (digits[i]) {
+            boxes[i].value = digits[i];
+            boxes[i].classList.add("filled");
+            boxes[i].classList.remove("input-error");
+          }
+        }
+        const focusIdx = Math.min(digits.length, boxes.length) - 1;
+        if (boxes[focusIdx]) boxes[focusIdx].focus();
+      }
+    });
+  });
+}
+
+async function handleVerifyOtp() {
+  const enteredOtp = getEnteredOtp();
+  const otpVerifyError = document.getElementById("otpVerifyError");
+  const boxes = document.querySelectorAll(".otp-digit-box");
+  const verifyBtn = document.getElementById("verifyOtpBtn");
+
+  if (!enteredOtp || enteredOtp.length < 6) {
+    if (otpVerifyError) {
+      otpVerifyError.textContent = "Please enter all 6 digits of the OTP.";
+      otpVerifyError.classList.add("show");
+    }
+    boxes.forEach(b => {
+      if (!b.value) b.classList.add("input-error");
+    });
+    return;
+  }
+
+  if (verifyBtn) {
+    verifyBtn.disabled = true;
+    verifyBtn.textContent = "Verifying...";
+  }
+
+  try {
+    const result = await OtpAuthService.verifyOtp(enteredOtp);
+
+    if (result.success) {
+      AppState.user = result.user;
+      try {
+        localStorage.setItem("movieExplorerUser", JSON.stringify(AppState.user));
+      } catch (err) {
+        console.warn("localStorage save failed:", err);
+      }
+
+      renderAuthNav();
+      closeModal("signInModal");
+      showToast(`Welcome, ${AppState.user.name}! Phone verified successfully.`);
+    } else {
+      // Invalid OTP handling
+      if (otpVerifyError) {
+        otpVerifyError.textContent = result.message || "Invalid OTP. Please try again.";
+        otpVerifyError.classList.add("show");
+      }
+      boxes.forEach(b => b.classList.add("input-error"));
+    }
+  } catch (err) {
+    if (otpVerifyError) {
+      otpVerifyError.textContent = "Verification failed. Please try again.";
+      otpVerifyError.classList.add("show");
+    }
+  } finally {
+    if (verifyBtn) {
+      verifyBtn.disabled = false;
+      verifyBtn.textContent = "Verify OTP";
+    }
+  }
+}
+
+function startResendCountdown(seconds) {
+  const btn = document.getElementById("btnResendOtp");
+  if (!btn) return;
+
+  if (OtpAuthService.countdownTimer) {
+    clearInterval(OtpAuthService.countdownTimer);
+  }
+
+  let timeLeft = seconds;
+  btn.disabled = true;
+  btn.textContent = `Resend OTP (${timeLeft}s)`;
+
+  OtpAuthService.countdownTimer = setInterval(() => {
+    timeLeft--;
+    if (timeLeft <= 0) {
+      clearInterval(OtpAuthService.countdownTimer);
+      OtpAuthService.countdownTimer = null;
+      btn.disabled = false;
+      btn.textContent = "Resend OTP";
+    } else {
+      btn.textContent = `Resend OTP (${timeLeft}s)`;
+    }
+  }, 1000);
+}
+
+async function handleResendOtp() {
+  if (!OtpAuthService.activeSession) {
+    showToast("Session expired. Please re-enter your details.");
+    returnToDetailsStep();
+    return;
+  }
+
+  const { name, email, countryCode, phoneNumber } = OtpAuthService.activeSession;
+  const res = await OtpAuthService.requestOtp(name, email, countryCode, phoneNumber);
+
+  const demoOtpValEl = document.getElementById("demoOtpCodeDisplay");
+  if (demoOtpValEl) demoOtpValEl.textContent = res.demoOtp;
+
+  const otpVerifyError = document.getElementById("otpVerifyError");
+  if (otpVerifyError) {
+    otpVerifyError.textContent = "";
+    otpVerifyError.classList.remove("show");
+  }
+
+  clearOtpDigitBoxes();
+  startResendCountdown(30);
+
+  const firstBox = document.querySelector(".otp-digit-box[data-idx='0']");
+  if (firstBox) firstBox.focus();
+
+  showToast("A new Demo OTP has been generated!");
 }
 
 function openUserProfileModal() {
@@ -1479,11 +1838,13 @@ function openUserProfileModal() {
 
   const nameEl = document.getElementById("profileModalName");
   const emailEl = document.getElementById("profileModalEmail");
+  const phoneEl = document.getElementById("profileModalPhone");
   const cityEl = document.getElementById("profileModalCity");
   const avatarEl = document.getElementById("profileModalAvatar");
 
   if (nameEl) nameEl.textContent = AppState.user.name;
   if (emailEl) emailEl.textContent = AppState.user.email;
+  if (phoneEl) phoneEl.textContent = AppState.user.phone || "Not linked";
   if (cityEl) cityEl.textContent = AppState.selectedCity || "Visakhapatnam";
   if (avatarEl) avatarEl.textContent = getInitials(AppState.user.name);
 
@@ -1492,6 +1853,7 @@ function openUserProfileModal() {
 
 function handleSignOut() {
   AppState.user = null;
+  OtpAuthService.clearSession();
   try {
     localStorage.removeItem("movieExplorerUser");
   } catch (err) {
