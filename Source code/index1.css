@@ -1,0 +1,539 @@
+/* ==========================================================================
+   Movie Explorer — Academic Project Cover Page Stylesheet
+   Design: Raghu Engineering College (A) B.Tech Mini Project Presentation
+   ========================================================================== */
+
+:root {
+  --bg-cream: #fbf9f4;
+  --bg-cream-dark: #f3efe4;
+  --bg-card: #ffffff;
+  
+  --primary-navy: #1e3a8a;
+  --primary-blue: #2563eb;
+  --accent-blue: #3b82f6;
+  --light-blue: #dbeafe;
+  --border-blue: #93c5fd;
+  
+  --brand-red: #f84464;
+  --brand-red-hover: #d82b4a;
+  --brand-red-glow: rgba(248, 68, 100, 0.35);
+
+  --text-dark: #0f172a;
+  --text-main: #1e293b;
+  --text-muted: #475569;
+  --text-light: #64748b;
+  
+  --font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --shadow-card: 0 12px 36px rgba(30, 58, 138, 0.08), 0 2px 6px rgba(0, 0, 0, 0.04);
+  --shadow-hover: 0 20px 48px rgba(30, 58, 138, 0.14), 0 4px 12px rgba(0, 0, 0, 0.06);
+  --shadow-btn: 0 4px 16px rgba(248, 68, 100, 0.3);
+  
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-pill: 9999px;
+  
+  --transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* --- Base & Reset --- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: #ede9dc;
+  background-image: 
+    radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.05) 0%, transparent 40%),
+    radial-gradient(circle at 90% 80%, rgba(248, 68, 100, 0.04) 0%, transparent 40%),
+    linear-gradient(135deg, #f4f0e4 0%, #ede8d8 100%);
+  color: var(--text-dark);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 30px 16px;
+  line-height: 1.5;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+/* --- Main Presentation Slide Frame --- */
+.cover-presentation-frame {
+  position: relative;
+  width: 100%;
+  max-width: 1160px;
+  min-height: 640px;
+  background-color: var(--bg-cream);
+  background-image: 
+    radial-gradient(ellipse at 50% 0%, #ffffff 0%, #faf8f2 60%, #f4efe2 100%);
+  border: 1.5px solid #e5dfcf;
+  border-radius: var(--radius-lg);
+  box-shadow: 
+    0 24px 60px rgba(15, 23, 42, 0.12),
+    0 4px 16px rgba(15, 23, 42, 0.04),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.8);
+  padding: 42px 48px 36px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* --- Corner Decorative Illustrations (SVG/CSS) --- */
+.deco-element {
+  position: absolute;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Top-Left Film Strip */
+.deco-film-strip-left {
+  top: -10px;
+  left: -20px;
+  width: 200px;
+  height: 240px;
+  opacity: 0.85;
+}
+
+/* Bottom-Left Popcorn & Tickets */
+.deco-popcorn-bottom-left {
+  bottom: -15px;
+  left: -15px;
+  width: 210px;
+  height: 220px;
+  opacity: 0.95;
+}
+
+/* Bottom-Right Film Reel */
+.deco-reel-bottom-right {
+  bottom: -20px;
+  right: -25px;
+  width: 220px;
+  height: 220px;
+  opacity: 0.9;
+}
+
+/* Top-Right Camera & Browser Wireframe */
+.deco-camera-top-right {
+  top: 15px;
+  right: 20px;
+  width: 220px;
+  height: 180px;
+  opacity: 0.8;
+}
+
+/* Decorative Bokeh Dots */
+.deco-dots-top-right {
+  top: 30px;
+  right: 40px;
+  display: flex;
+  gap: 6px;
+  opacity: 0.35;
+}
+
+.deco-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--primary-blue);
+}
+
+/* --- Content Wrapper (Above Decorations) --- */
+.cover-content-shell {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 28px;
+}
+
+/* ==========================================================================
+   2. COLLEGE HEADER
+   ========================================================================== */
+.college-header-block {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  text-align: center;
+  padding: 6px 0;
+}
+
+.college-logo-wrap {
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 2px solid var(--border-blue);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  overflow: hidden;
+  padding: 4px;
+}
+
+.college-logo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.college-logo-placeholder {
+  font-size: 1.8rem;
+}
+
+.college-text-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+}
+
+.college-name {
+  font-size: clamp(1.45rem, 3.2vw, 2.05rem);
+  font-weight: 800;
+  color: var(--primary-navy);
+  letter-spacing: -0.5px;
+  line-height: 1.2;
+}
+
+.college-degree {
+  font-size: clamp(0.9rem, 2vw, 1.05rem);
+  font-weight: 700;
+  color: #1e40af;
+  margin-top: 2px;
+}
+
+.college-dept {
+  font-size: clamp(0.85rem, 1.8vw, 0.98rem);
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* ==========================================================================
+   3. MAIN PROJECT TITLE CARD
+   ========================================================================== */
+.project-title-card-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin: 6px 0;
+}
+
+.project-title-card {
+  width: 100%;
+  max-width: 860px;
+  background: var(--bg-card);
+  border: 1.5px solid var(--border-blue);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  padding: 30px 36px 28px;
+  text-align: center;
+  position: relative;
+  transition: var(--transition);
+}
+
+.project-title-card:hover {
+  box-shadow: var(--shadow-hover);
+  border-color: var(--primary-blue);
+  transform: translateY(-2px);
+}
+
+.project-main-heading {
+  font-size: clamp(2rem, 4.5vw, 2.85rem);
+  font-weight: 900;
+  color: var(--text-dark);
+  letter-spacing: 2px;
+  line-height: 1.15;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+
+.project-sub-meta {
+  font-size: clamp(0.92rem, 2vw, 1.08rem);
+  font-weight: 700;
+  color: var(--text-main);
+  line-height: 1.5;
+  margin-bottom: 6px;
+}
+
+.project-team-line {
+  font-size: clamp(0.88rem, 1.8vw, 1rem);
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-bottom: 5px;
+}
+
+.project-guide-line {
+  font-size: clamp(0.88rem, 1.8vw, 1rem);
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-bottom: 22px;
+}
+
+.project-guide-name {
+  font-weight: 700;
+  color: var(--text-dark);
+}
+
+/* Action Buttons inside Title Card */
+.project-card-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding-top: 14px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.btn-explore-movies {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--brand-red);
+  color: #ffffff !important;
+  font-size: 1rem;
+  font-weight: 800;
+  padding: 13px 30px;
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-btn);
+  transition: var(--transition);
+  letter-spacing: 0.3px;
+}
+
+.btn-explore-movies:hover {
+  background: var(--brand-red-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(248, 68, 100, 0.45);
+}
+
+.btn-explore-movies:focus-visible {
+  outline: 3px solid var(--primary-blue);
+  outline-offset: 3px;
+}
+
+.btn-abstract-doc {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #f8fafc;
+  color: var(--primary-navy) !important;
+  border: 1px solid var(--border-blue);
+  font-size: 0.92rem;
+  font-weight: 700;
+  padding: 12px 22px;
+  border-radius: var(--radius-pill);
+  transition: var(--transition);
+}
+
+.btn-abstract-doc:hover {
+  background: #eff6ff;
+  border-color: var(--primary-blue);
+  color: var(--primary-blue) !important;
+  transform: translateY(-1px);
+}
+
+/* ==========================================================================
+   4. BOTTOM THREE-COLUMN INFORMATION SECTION
+   ========================================================================== */
+.bottom-info-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.35fr;
+  align-items: stretch;
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(147, 197, 253, 0.5);
+  border-radius: var(--radius-md);
+  padding: 22px 28px;
+  box-shadow: 0 6px 20px rgba(30, 58, 138, 0.04);
+}
+
+.bottom-info-col {
+  padding: 0 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+.bottom-info-col:first-child {
+  padding-left: 8px;
+}
+
+.bottom-info-col:not(:last-child) {
+  border-right: 2px solid var(--primary-blue);
+}
+
+.info-col-label {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--text-dark);
+  margin-bottom: 8px;
+  letter-spacing: -0.2px;
+}
+
+.info-col-name {
+  font-size: 0.96rem;
+  font-weight: 700;
+  color: var(--text-main);
+  line-height: 1.4;
+}
+
+/* Red underline accent inspired by reference image */
+.underline-accent {
+  display: inline-block;
+  text-decoration: underline;
+  text-decoration-color: #ef4444;
+  text-underline-offset: 4px;
+}
+
+/* Team list styling */
+.team-roster-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.team-member-item {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text-main);
+  line-height: 1.45;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.team-member-item::before {
+  content: "•";
+  color: var(--primary-blue);
+  font-weight: 800;
+  font-size: 1rem;
+}
+
+.team-tl-tag {
+  color: var(--primary-navy);
+  font-weight: 700;
+}
+
+/* Footer micro-tagline */
+.cover-footer-note {
+  text-align: center;
+  font-size: 0.78rem;
+  color: var(--text-light);
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  margin-top: -6px;
+}
+
+/* ==========================================================================
+   5. RESPONSIVE BREAKPOINTS
+   ========================================================================== */
+@media (max-width: 992px) {
+  .cover-presentation-frame {
+    padding: 32px 28px 28px;
+  }
+  
+  .bottom-info-columns {
+    grid-template-columns: 1fr;
+    gap: 18px;
+    padding: 20px;
+  }
+  
+  .bottom-info-col {
+    padding: 0 0 16px 0 !important;
+  }
+  
+  .bottom-info-col:not(:last-child) {
+    border-right: none;
+    border-bottom: 1.5px solid var(--border-blue);
+  }
+
+  .deco-film-strip-left {
+    width: 140px;
+    height: 170px;
+  }
+
+  .deco-popcorn-bottom-left {
+    width: 150px;
+    height: 160px;
+  }
+
+  .deco-reel-bottom-right {
+    width: 150px;
+    height: 150px;
+  }
+
+  .deco-camera-top-right {
+    width: 160px;
+    height: 130px;
+  }
+}
+
+@media (max-width: 640px) {
+  body {
+    padding: 12px 8px;
+  }
+
+  .cover-presentation-frame {
+    padding: 24px 18px 20px;
+    border-radius: var(--radius-md);
+  }
+
+  .college-header-block {
+    flex-direction: column;
+    text-align: center;
+    gap: 10px;
+  }
+
+  .college-text-meta {
+    align-items: center;
+    text-align: center;
+  }
+
+  .project-title-card {
+    padding: 22px 18px 20px;
+  }
+
+  .project-main-heading {
+    font-size: 1.85rem;
+  }
+
+  .btn-explore-movies,
+  .btn-abstract-doc {
+    width: 100%;
+    justify-content: center;
+    padding: 12px 18px;
+  }
+
+  .deco-element {
+    opacity: 0.45 !important;
+  }
+}

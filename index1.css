@@ -1,32 +1,69 @@
+/* ==========================================================================
+   Movie Explorer — Academic Project Cover Page Stylesheet
+   Design: Raghu Engineering College (A) B.Tech Mini Project Presentation
+   ========================================================================== */
+
 :root {
-  color-scheme: dark;
-  --ink: #111613;
-  --ink-soft: #1b231d;
-  --paper: #f2f0e8;
-  --muted: #a3aaa0;
-  --lime: #d5ef78;
-  --coral: #ff8065;
-  --line: rgba(242, 240, 232, 0.16);
-  --font-body: "DM Sans", sans-serif;
-  --font-display: "Playfair Display", Georgia, serif;
+  --bg-cream: #fbf9f4;
+  --bg-cream-dark: #f3efe4;
+  --bg-card: #ffffff;
+  
+  --primary-navy: #1e3a8a;
+  --primary-blue: #2563eb;
+  --accent-blue: #3b82f6;
+  --light-blue: #dbeafe;
+  --border-blue: #93c5fd;
+  
+  --brand-red: #f84464;
+  --brand-red-hover: #d82b4a;
+  --brand-red-glow: rgba(248, 68, 100, 0.35);
+
+  --text-dark: #0f172a;
+  --text-main: #1e293b;
+  --text-muted: #475569;
+  --text-light: #64748b;
+  
+  --font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --shadow-card: 0 12px 36px rgba(30, 58, 138, 0.08), 0 2px 6px rgba(0, 0, 0, 0.04);
+  --shadow-hover: 0 20px 48px rgba(30, 58, 138, 0.14), 0 4px 12px rgba(0, 0, 0, 0.06);
+  --shadow-btn: 0 4px 16px rgba(248, 68, 100, 0.3);
+  
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-pill: 9999px;
+  
+  --transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-*,
-*::before,
-*::after {
+/* --- Base & Reset --- */
+*, *::before, *::after {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 html {
-  min-width: 320px;
-  background: var(--ink);
+  font-size: 16px;
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
-  margin: 0;
+  font-family: var(--font-family);
+  background-color: #ede9dc;
+  background-image: 
+    radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.05) 0%, transparent 40%),
+    radial-gradient(circle at 90% 80%, rgba(248, 68, 100, 0.04) 0%, transparent 40%),
+    linear-gradient(135deg, #f4f0e4 0%, #ede8d8 100%);
+  color: var(--text-dark);
   min-height: 100vh;
-  color: var(--paper);
-  font-family: var(--font-body);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 30px 16px;
+  line-height: 1.5;
+  overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -35,553 +72,468 @@ a {
   text-decoration: none;
 }
 
-a:focus-visible {
-  outline: 2px solid var(--lime);
-  outline-offset: 5px;
+button {
+  font: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
 }
 
-.welcome-page {
-  overflow-x: hidden;
-  background-color: var(--ink);
-  background-image: repeating-linear-gradient(
-    115deg,
-    transparent 0,
-    transparent 79px,
-    rgba(242, 240, 232, 0.018) 80px,
-    transparent 81px
-  );
-}
-
-.welcome-shell {
-  width: min(100% - 112px, 1280px);
-  min-height: 100vh;
-  margin: 0 auto;
+/* --- Main Presentation Slide Frame --- */
+.cover-presentation-frame {
+  position: relative;
+  width: 100%;
+  max-width: 1160px;
+  min-height: 640px;
+  background-color: var(--bg-cream);
+  background-image: 
+    radial-gradient(ellipse at 50% 0%, #ffffff 0%, #faf8f2 60%, #f4efe2 100%);
+  border: 1.5px solid #e5dfcf;
+  border-radius: var(--radius-lg);
+  box-shadow: 
+    0 24px 60px rgba(15, 23, 42, 0.12),
+    0 4px 16px rgba(15, 23, 42, 0.04),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.8);
+  padding: 42px 48px 36px;
   display: flex;
   flex-direction: column;
-}
-
-.welcome-header {
-  min-height: 96px;
-  display: flex;
-  align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid var(--line);
-  animation: arrive 650ms ease-out both;
+  overflow: hidden;
+  isolation: isolate;
 }
 
-.wordmark {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  color: var(--paper);
-  font-size: 1.35rem;
-  font-weight: 900;
+/* --- Corner Decorative Illustrations (SVG/CSS) --- */
+.deco-element {
+  position: absolute;
+  pointer-events: none;
+  z-index: 1;
 }
 
-.wordmark-accent {
-  color: #f84464;
+/* Top-Left Film Strip */
+.deco-film-strip-left {
+  top: -10px;
+  left: -20px;
+  width: 200px;
+  height: 240px;
+  opacity: 0.85;
 }
 
-.header-note {
-  display: inline-flex;
-  align-items: center;
-  gap: 9px;
-  color: var(--muted);
-  font-size: 0.78rem;
-  letter-spacing: 0.04em;
+/* Bottom-Left Popcorn & Tickets */
+.deco-popcorn-bottom-left {
+  bottom: -15px;
+  left: -15px;
+  width: 210px;
+  height: 220px;
+  opacity: 0.95;
 }
 
-.status-dot {
-  width: 7px;
-  height: 7px;
+/* Bottom-Right Film Reel */
+.deco-reel-bottom-right {
+  bottom: -20px;
+  right: -25px;
+  width: 220px;
+  height: 220px;
+  opacity: 0.9;
+}
+
+/* Top-Right Camera & Browser Wireframe */
+.deco-camera-top-right {
+  top: 15px;
+  right: 20px;
+  width: 220px;
+  height: 180px;
+  opacity: 0.8;
+}
+
+/* Decorative Bokeh Dots */
+.deco-dots-top-right {
+  top: 30px;
+  right: 40px;
+  display: flex;
+  gap: 6px;
+  opacity: 0.35;
+}
+
+.deco-dot {
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
-  background: var(--coral);
-  box-shadow: 0 0 12px rgba(255, 128, 101, 0.65);
+  background-color: var(--primary-blue);
 }
 
-.welcome-hero {
-  flex: 1;
-  min-height: 610px;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(390px, 0.95fr);
-  align-items: center;
-  gap: 48px;
-  padding: 48px 0 54px;
-}
-
-.hero-copy {
+/* --- Content Wrapper (Above Decorations) --- */
+.cover-content-shell {
   position: relative;
   z-index: 2;
-  padding: 20px 0;
-  animation: arrive 750ms 100ms ease-out both;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 28px;
 }
 
-.eyebrow {
+/* ==========================================================================
+   2. COLLEGE HEADER
+   ========================================================================== */
+.college-header-block {
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin: 0 0 25px;
-  color: var(--lime);
-  font-size: 0.76rem;
+  justify-content: center;
+  gap: 20px;
+  text-align: center;
+  padding: 6px 0;
+}
+
+.college-logo-wrap {
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 2px solid var(--border-blue);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  overflow: hidden;
+  padding: 4px;
+}
+
+.college-logo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.college-logo-placeholder {
+  font-size: 1.8rem;
+}
+
+.college-text-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+}
+
+.college-name {
+  font-size: clamp(1.45rem, 3.2vw, 2.05rem);
+  font-weight: 800;
+  color: var(--primary-navy);
+  letter-spacing: -0.5px;
+  line-height: 1.2;
+}
+
+.college-degree {
+  font-size: clamp(0.9rem, 2vw, 1.05rem);
   font-weight: 700;
-  letter-spacing: 0.13em;
+  color: #1e40af;
+  margin-top: 2px;
+}
+
+.college-dept {
+  font-size: clamp(0.85rem, 1.8vw, 0.98rem);
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* ==========================================================================
+   3. MAIN PROJECT TITLE CARD
+   ========================================================================== */
+.project-title-card-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin: 6px 0;
+}
+
+.project-title-card {
+  width: 100%;
+  max-width: 860px;
+  background: var(--bg-card);
+  border: 1.5px solid var(--border-blue);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  padding: 30px 36px 28px;
+  text-align: center;
+  position: relative;
+  transition: var(--transition);
+}
+
+.project-title-card:hover {
+  box-shadow: var(--shadow-hover);
+  border-color: var(--primary-blue);
+  transform: translateY(-2px);
+}
+
+.project-main-heading {
+  font-size: clamp(2rem, 4.5vw, 2.85rem);
+  font-weight: 900;
+  color: var(--text-dark);
+  letter-spacing: 2px;
+  line-height: 1.15;
+  margin-bottom: 12px;
   text-transform: uppercase;
 }
 
-.eyebrow-line {
-  width: 32px;
-  height: 1px;
-  background: var(--coral);
+.project-sub-meta {
+  font-size: clamp(0.92rem, 2vw, 1.08rem);
+  font-weight: 700;
+  color: var(--text-main);
+  line-height: 1.5;
+  margin-bottom: 6px;
 }
 
-.hero-copy h1 {
-  max-width: 650px;
-  margin: 0;
-  font-family: var(--font-display);
-  font-size: 4.4rem;
+.project-team-line {
+  font-size: clamp(0.88rem, 1.8vw, 1rem);
   font-weight: 600;
-  line-height: 1.07;
+  color: var(--text-muted);
+  margin-bottom: 5px;
 }
 
-.hero-copy h1 em {
-  color: var(--coral);
+.project-guide-line {
+  font-size: clamp(0.88rem, 1.8vw, 1rem);
   font-weight: 600;
+  color: var(--text-muted);
+  margin-bottom: 22px;
 }
 
-.hero-description {
-  max-width: 460px;
-  margin: 25px 0 0;
-  color: #c1c5bd;
-  font-size: 1rem;
-  line-height: 1.8;
+.project-guide-name {
+  font-weight: 700;
+  color: var(--text-dark);
 }
 
-.hero-actions {
+/* Action Buttons inside Title Card */
+.project-card-actions {
   display: flex;
-  align-items: center;
-  gap: 23px;
-  flex-wrap: wrap;
-  margin-top: 34px;
-}
-
-.action-primary {
-  min-height: 54px;
-  display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 27px;
-  padding: 0 20px;
-  background: var(--lime);
-  color: var(--ink);
-  font-size: 0.9rem;
-  font-weight: 700;
-  transition: background-color 180ms ease, transform 180ms ease;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding-top: 14px;
+  border-top: 1px solid #f1f5f9;
 }
 
-.action-primary span {
-  font-size: 1.15rem;
-  transition: transform 180ms ease;
-}
-
-.action-primary:hover {
-  transform: translateY(-2px);
-  background: #e2f89a;
-}
-
-.action-primary:hover span {
-  transform: translate(2px, -2px);
-}
-
-.action-secondary {
-  min-height: 48px;
+.btn-explore-movies {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  color: var(--paper);
-  font-size: 0.86rem;
-  transition: color 180ms ease;
+  background: var(--brand-red);
+  color: #ffffff !important;
+  font-size: 1rem;
+  font-weight: 800;
+  padding: 13px 30px;
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-btn);
+  transition: var(--transition);
+  letter-spacing: 0.3px;
 }
 
-.action-secondary:hover {
-  color: var(--lime);
+.btn-explore-movies:hover {
+  background: var(--brand-red-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(248, 68, 100, 0.45);
 }
 
-.document-icon {
-  width: 29px;
-  height: 29px;
-  display: grid;
-  place-items: center;
-  border: 1px solid rgba(242, 240, 232, 0.35);
-  border-radius: 50%;
-  font-size: 0.85rem;
+.btn-explore-movies:focus-visible {
+  outline: 3px solid var(--primary-blue);
+  outline-offset: 3px;
 }
 
-.hero-footnote {
-  display: flex;
+.btn-abstract-doc {
+  display: inline-flex;
   align-items: center;
-  gap: 10px;
-  margin-top: 58px;
-  color: #858d82;
-  font-size: 0.64rem;
-  font-weight: 600;
-  letter-spacing: 0.12em;
+  gap: 8px;
+  background: #f8fafc;
+  color: var(--primary-navy) !important;
+  border: 1px solid var(--border-blue);
+  font-size: 0.92rem;
+  font-weight: 700;
+  padding: 12px 22px;
+  border-radius: var(--radius-pill);
+  transition: var(--transition);
 }
 
-.footnote-rule {
-  width: 27px;
-  height: 1px;
-  background: var(--coral);
+.btn-abstract-doc:hover {
+  background: #eff6ff;
+  border-color: var(--primary-blue);
+  color: var(--primary-blue) !important;
+  transform: translateY(-1px);
 }
 
-.poster-scene {
-  position: relative;
-  width: 100%;
-  height: 475px;
-  isolation: isolate;
-  animation: arrive 850ms 180ms ease-out both;
+/* ==========================================================================
+   4. BOTTOM THREE-COLUMN INFORMATION SECTION
+   ========================================================================== */
+.bottom-info-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.35fr;
+  align-items: stretch;
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(147, 197, 253, 0.5);
+  border-radius: var(--radius-md);
+  padding: 22px 28px;
+  box-shadow: 0 6px 20px rgba(30, 58, 138, 0.04);
 }
 
-.scene-orbit {
-  position: absolute;
-  z-index: -1;
-  border: 1px solid rgba(213, 239, 120, 0.2);
-  border-radius: 50%;
-  transform: rotate(-25deg);
-}
-
-.orbit-one {
-  width: 470px;
-  height: 300px;
-  top: 82px;
-  left: 8px;
-}
-
-.orbit-two {
-  width: 410px;
-  height: 260px;
-  top: 106px;
-  left: 38px;
-  border-color: rgba(255, 128, 101, 0.22);
-  transform: rotate(26deg);
-}
-
-.poster {
-  position: absolute;
-  overflow: hidden;
-  margin: 0;
-  background: var(--ink-soft);
-  box-shadow: 0 22px 58px rgba(0, 0, 0, 0.48);
-}
-
-.poster img {
-  width: 100%;
-  height: 100%;
-  display: block;
-  object-fit: cover;
-}
-
-.poster-back {
-  top: 64px;
-  right: 12px;
-  width: 232px;
-  height: 344px;
-  transform: rotate(8deg);
-  opacity: 0.88;
-}
-
-.poster-front {
-  top: 32px;
-  left: 55px;
-  width: 255px;
-  height: 382px;
-  transform: rotate(-5deg);
-  border: 1px solid rgba(242, 240, 232, 0.3);
-  animation: poster-settle 900ms 450ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
-}
-
-.poster-front::after {
-  position: absolute;
-  inset: 36% 0 0;
-  background: linear-gradient(180deg, transparent, rgba(10, 14, 11, 0.9));
-  content: "";
-}
-
-.poster-front figcaption {
-  position: absolute;
-  z-index: 1;
-  right: 20px;
-  bottom: 22px;
-  left: 20px;
+.bottom-info-col {
+  padding: 0 24px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
 }
 
-.poster-label {
-  color: var(--lime);
-  font-size: 0.59rem;
+.bottom-info-col:first-child {
+  padding-left: 8px;
+}
+
+.bottom-info-col:not(:last-child) {
+  border-right: 2px solid var(--primary-blue);
+}
+
+.info-col-label {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--text-dark);
+  margin-bottom: 8px;
+  letter-spacing: -0.2px;
+}
+
+.info-col-name {
+  font-size: 0.96rem;
   font-weight: 700;
-  letter-spacing: 0.15em;
+  color: var(--text-main);
+  line-height: 1.4;
 }
 
-.poster-title {
-  color: var(--paper);
-  font-family: var(--font-display);
-  font-size: 1.52rem;
-  line-height: 1.14;
+/* Red underline accent inspired by reference image */
+.underline-accent {
+  display: inline-block;
+  text-decoration: underline;
+  text-decoration-color: #ef4444;
+  text-underline-offset: 4px;
 }
 
-.scene-sparkle {
-  position: absolute;
-  color: var(--lime);
-  line-height: 1;
+/* Team list styling */
+.team-roster-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
-.sparkle-one {
-  top: 14px;
-  right: 78px;
-  font-size: 2.2rem;
-  animation: twinkle 3s ease-in-out infinite;
-}
-
-.sparkle-two {
-  right: 5px;
-  bottom: 74px;
-  color: var(--coral);
-  font-size: 1.6rem;
-  animation: twinkle 3s 1s ease-in-out infinite;
-}
-
-.scene-index {
-  position: absolute;
-  right: 22px;
-  bottom: 26px;
-  color: var(--muted);
-  font-size: 0.68rem;
-  letter-spacing: 0.1em;
-}
-
-.welcome-footer {
-  min-height: 70px;
+.team-member-item {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text-main);
+  line-height: 1.45;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  border-top: 1px solid var(--line);
-  color: #858d82;
-  font-size: 0.62rem;
+  gap: 6px;
+}
+
+.team-member-item::before {
+  content: "•";
+  color: var(--primary-blue);
+  font-weight: 800;
+  font-size: 1rem;
+}
+
+.team-tl-tag {
+  color: var(--primary-navy);
+  font-weight: 700;
+}
+
+/* Footer micro-tagline */
+.cover-footer-note {
+  text-align: center;
+  font-size: 0.78rem;
+  color: var(--text-light);
   font-weight: 600;
-  letter-spacing: 0.12em;
-  animation: arrive 700ms 280ms ease-out both;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  margin-top: -6px;
 }
 
-.footer-mark span {
-  padding-left: 5px;
-  color: var(--coral);
-}
-
-@keyframes arrive {
-  from {
-    opacity: 0;
-    transform: translateY(14px);
+/* ==========================================================================
+   5. RESPONSIVE BREAKPOINTS
+   ========================================================================== */
+@media (max-width: 992px) {
+  .cover-presentation-frame {
+    padding: 32px 28px 28px;
   }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes poster-settle {
-  from {
-    opacity: 0;
-    transform: translateY(18px) rotate(-2deg);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0) rotate(-5deg);
-  }
-}
-
-@keyframes twinkle {
-  0%,
-  100% {
-    opacity: 0.65;
-    transform: scale(0.9) rotate(0);
-  }
-
-  50% {
-    opacity: 1;
-    transform: scale(1.08) rotate(12deg);
-  }
-}
-
-@media (max-width: 900px) {
-  .welcome-shell {
-    width: min(100% - 64px, 700px);
-  }
-
-  .welcome-hero {
-    min-height: unset;
+  
+  .bottom-info-columns {
     grid-template-columns: 1fr;
-    gap: 10px;
-    padding: 74px 0 36px;
+    gap: 18px;
+    padding: 20px;
+  }
+  
+  .bottom-info-col {
+    padding: 0 0 16px 0 !important;
+  }
+  
+  .bottom-info-col:not(:last-child) {
+    border-right: none;
+    border-bottom: 1.5px solid var(--border-blue);
   }
 
-  .hero-copy h1 {
-    font-size: 4rem;
+  .deco-film-strip-left {
+    width: 140px;
+    height: 170px;
   }
 
-  .poster-scene {
-    width: min(100%, 520px);
-    justify-self: center;
-    height: 430px;
+  .deco-popcorn-bottom-left {
+    width: 150px;
+    height: 160px;
   }
 
-  .poster-front {
-    left: 74px;
+  .deco-reel-bottom-right {
+    width: 150px;
+    height: 150px;
   }
 
-  .poster-back {
-    right: 68px;
-  }
-
-  .orbit-one {
-    left: 20px;
-  }
-
-  .orbit-two {
-    left: 50px;
-  }
-
-  .hero-footnote {
-    margin-top: 36px;
+  .deco-camera-top-right {
+    width: 160px;
+    height: 130px;
   }
 }
 
-@media (max-width: 520px) {
-  .welcome-shell {
-    width: calc(100% - 40px);
+@media (max-width: 640px) {
+  body {
+    padding: 12px 8px;
   }
 
-  .welcome-header {
-    min-height: 74px;
+  .cover-presentation-frame {
+    padding: 24px 18px 20px;
+    border-radius: var(--radius-md);
   }
 
-  .wordmark {
-    gap: 9px;
-    font-size: 1rem;
-  }
-
-  .header-note {
-    max-width: 120px;
-    font-size: 0.68rem;
-    line-height: 1.4;
-  }
-
-  .welcome-hero {
-    padding-top: 58px;
-  }
-
-  .eyebrow {
-    margin-bottom: 18px;
-    font-size: 0.66rem;
-  }
-
-  .hero-copy h1 {
-    font-size: 3rem;
-  }
-
-  .hero-description {
-    margin-top: 18px;
-    font-size: 0.91rem;
-  }
-
-  .hero-actions {
-    align-items: flex-start;
+  .college-header-block {
     flex-direction: column;
+    text-align: center;
     gap: 10px;
-    margin-top: 25px;
   }
 
-  .action-primary {
-    min-height: 50px;
+  .college-text-meta {
+    align-items: center;
+    text-align: center;
   }
 
-  .hero-footnote {
-    margin-top: 28px;
-    font-size: 0.56rem;
+  .project-title-card {
+    padding: 22px 18px 20px;
   }
 
-  .poster-scene {
-    height: 350px;
-    margin-top: 12px;
+  .project-main-heading {
+    font-size: 1.85rem;
   }
 
-  .poster-front {
-    top: 26px;
-    left: calc(50% - 132px);
-    width: 210px;
-    height: 315px;
+  .btn-explore-movies,
+  .btn-abstract-doc {
+    width: 100%;
+    justify-content: center;
+    padding: 12px 18px;
   }
 
-  .poster-back {
-    top: 54px;
-    right: calc(50% - 178px);
-    width: 190px;
-    height: 282px;
-  }
-
-  .poster-title {
-    font-size: 1.25rem;
-  }
-
-  .orbit-one {
-    top: 60px;
-    left: 50%;
-    width: 370px;
-    height: 240px;
-    transform: translateX(-50%) rotate(-25deg);
-  }
-
-  .orbit-two {
-    top: 85px;
-    left: 50%;
-    width: 340px;
-    height: 210px;
-    transform: translateX(-50%) rotate(26deg);
-  }
-
-  .sparkle-one {
-    top: 4px;
-    right: 14px;
-  }
-
-  .sparkle-two {
-    right: 8px;
-    bottom: 30px;
-  }
-
-  .scene-index {
-    right: 4px;
-    bottom: 9px;
-  }
-
-  .welcome-footer {
-    min-height: 60px;
-    font-size: 0.51rem;
-    letter-spacing: 0.08em;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    scroll-behavior: auto !important;
-    transition-duration: 0.01ms !important;
+  .deco-element {
+    opacity: 0.45 !important;
   }
 }
